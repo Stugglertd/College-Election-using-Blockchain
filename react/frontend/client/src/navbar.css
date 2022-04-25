@@ -1,0 +1,10 @@
+.navbar{
+    background-color: rgb(57, 10, 228) !important;
+}
+img{
+    border: 5px solid rgb(180, 43, 43);
+}
+a{
+    color: black;
+    font-size: large;
+}
