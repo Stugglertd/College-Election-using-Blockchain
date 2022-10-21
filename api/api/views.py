@@ -5,7 +5,7 @@ from rest_framework.renderers import JSONRenderer
 from django.http import HttpResponse,JsonResponse
 # Create your views here.
 def student_detail(request,pk):
-  stu = Student.objects.get(id=pk)
+  stu = Student.objects.get(prn=pk)
   serializer = StudentSerializer(stu)#complex->python
 #   json_data = JSONRenderer().render(serializer.data)
 #   return HttpResponse(json_data,content_type='application/json')

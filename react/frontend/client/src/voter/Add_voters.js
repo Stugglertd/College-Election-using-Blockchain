@@ -1,24 +1,22 @@
-import React, { useState ,useEffect} from "react";
-import Electionabi from "./contracts/Election.json";
-import "./Add_leader.css"
-function Add_leader() {
-  useEffect(() => {
-    LoadBlockchaindata();
-  },[])
+import React, { useState, useEffect } from "react";
+import Electionabi from "../contracts/Election.json";
+import '../leader/Add_leader.css'
+import Add_leader from "../leader/Add_leader";
+const Add_voters = () => {
   const [name, setName] = useState("");
-  const [id, setId] = useState("");
-  const [data,setData] = useState([]);
+  const [prn, setPrn] = useState("");
+  const [data, setData] = useState([]);
 
   let Web3 = require("web3");
-  let web3 = new Web3(
-      new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545")
-  );
-
+  let web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
   function refreshPage() {
     window.location.reload(false);
   }
 
-  const LoadBlockchaindata = async()=>{
+  useEffect(() => {
+    LoadBlockchaindata();
+  }, []);
+  const LoadBlockchaindata = async () => {
     const networkId = await web3.eth.net.getId();
     const networkData = Electionabi.networks[networkId];
     let election = new web3.eth.Contract(Electionabi.abi, networkData.address);
@@ -28,13 +26,13 @@ function Add_leader() {
     // });
     // const account = accounts[0];
 
-    let temp = await election.methods.getCan().call();
-    setData(temp);
-    // component();
-  }
+    let temp = await election.methods.getVoters().call();
+    let temp1 = Array.from(temp);
+    setData(temp1);
+  };
   async function handleSubmit(event) {
     event.preventDefault();
-    alert(`The name you entered was: ${name}${id}`);
+    alert(`The name you entered was: ${prn}${name}`);
     const networkId = await web3.eth.net.getId();
     const networkData = Electionabi.networks[networkId];
     let election = new web3.eth.Contract(Electionabi.abi, networkData.address);
@@ -43,32 +41,28 @@ function Add_leader() {
       method: "eth_requestAccounts",
     });
     const account = accounts[0];
-    await election.methods.addCandidate(id,name.toLowerCase())
-    .send({from:account,gas:3000000});
-    // count = await election.methods.candidatesCount().call();//.then(console.log);
-    // await election.methods.candidates().call().then(console.log);
-    let temp = await election.methods.getCan().call();
+
+    await election.methods
+      .addVoter(prn, name)
+      .send({ from: account, gas: 3000000 });
+
+    let temp = await election.methods.getVoters().call();
+    // let temp1 = Array.from(temp);
     setData(temp);
     refreshPage();
   }
-  // async function component(){
-  //   console.log("Componet");
-  //   let url = "http://127.0.0.1:8000/stuinfo/2";
-  //   let data = await fetch(url);
-  //   console.log(data);
-  // }
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      {/* <form onSubmit={handleSubmit}>
         <label>
           Enter Prn No:
           <input
             type="text"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
+            value={prn}
+            onChange={(e) => setPrn(e.target.value)}
           />
         </label>
-        <br/>
+        <br />
         <label>
           Enter Name:
           <input
@@ -77,16 +71,18 @@ function Add_leader() {
             onChange={(e) => setName(e.target.value)}
           />
         </label>
-        <br/>
+        <br />
         <input type="submit" />
-      </form>
+      </form> */}
       <br />
       <br />
       <br />
       <div>
         <header>
-          <h1 className="text-center">List of Leader's:</h1>
+          <h1 className="text-center">List of Voter's:</h1>
         </header>
+        <br/>
+        <button><a href="Add_verify_voter">Add Voter</a></button>
         <main>
           <table className="table">
             <thead>
@@ -103,7 +99,7 @@ function Add_leader() {
               {/* <ol>   */}
               {data.map((acc, index) => (
                 <tr key={index}>
-                  <td>{index+1}</td>
+                  <td>{index + 1}</td>
                   <td>{acc.prn_no}</td>
                   <td>{acc.name.toUpperCase()}</td>
                 </tr>
@@ -116,5 +112,5 @@ function Add_leader() {
       </div>
     </>
   );
-}
-export default Add_leader;
+};
+export default Add_voters;

@@ -4,11 +4,13 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import Navbar from "./navbar"
 import Voting from './Voting';
-import Add_leader from './Add_leader';
-import Add_voters from './Add_voters';
+import Add_leader from './leader/Add_leader';
+import Add_voters from './voter/Add_voters';
 import Voter_stat from './Voter_stat';
 import Election_res from './Election_res';
 import Api from './Api';
+import Add_verify_voter from './voter/Add_verify_voter';
+import Final_add_voter from './voter/Final_add_voter';
 
 function App(){
   return(
@@ -23,6 +25,8 @@ function App(){
             <Route path="/voter_stat" element={<Voter_stat/>}/>  
             <Route path="/election_res" element={<Election_res/>}/> 
             <Route path="/api" element={<Api/>}/>
+            <Route path="/Add_verify_voter" element={<Add_verify_voter/>}/>
+            <Route path="/Final_add_voter" element={<Final_add_voter/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
